@@ -1,4 +1,3 @@
-import enum
 import functools
 from typing import TypedDict, Unpack
 
@@ -49,39 +48,40 @@ class FormatOptions(TypedDict):
     conjugate_large_power: bool
 
 
-class SmallDanishNumbers(enum.IntEnum):
-    NUL = 0
-    EN = 1
-    TO = 2
-    TRE = 3
-    FIRE = 4
-    FEM = 5
-    SEKS = 6
-    SYV = 7
-    OTTE = 8
-    NI = 9
-    TI = 10
-    ELLEVE = 11
-    TOLV = 12
-    TRETTEN = 13
-    FJORTEN = 14
-    FEMTEN = 15
-    SEKSTEN = 16
-    SYTTEN = 17
-    ATTEN = 18
-    NITTEN = 19
+SMALL_DANISH_NUMBERS = {
+    0: 'Nul', 
+    1: 'En', 
+    2: 'To', 
+    3: 'Tre', 
+    4: 'Fire', 
+    5: 'Fem', 
+    6: 'Seks', 
+    7: 'Syv', 
+    8: 'Otte', 
+    9: 'Ni', 
+    10: 'Ti', 
+    11: 'Elleve', 
+    12: 'Tolv', 
+    13: 'Tretten', 
+    14: 'Fjorten', 
+    15: 'Femten', 
+    16: 'Seksten', 
+    17: 'Sytten', 
+    18: 'Atten', 
+    19: 'Nitten', 
+}
 
-
-class DanishTens(enum.IntEnum):
-    TI = 10
-    TYVE = 20
-    TREDIVE = 30
-    FYRE = 40
-    HALVTREDS = 50
-    TRES = 60
-    HALVFJERDS = 70
-    FIRS = 80
-    HALVFEMS = 90
+DANISH_TENS = {
+    1: 'Ti',
+    2: 'Tyve',
+    3: 'Tredive',
+    4: 'Fyre',
+    5: 'Halvtreds',
+    6: 'Tres',
+    7: 'Halvfjerds',
+    8: 'Firs',
+    9: 'Halvfems',
+}
 
 
 def format_name(func):
@@ -191,19 +191,19 @@ def below_a_hundret(n: int, **options: Unpack[FormatOptions]) -> str:
         return below_twenty(n)
     tens, ones = divmod(n, 10)
     if ones == 0:
-        return DanishTens(n).name
-    return options['seperator'].join([below_ten(ones), "og", DanishTens(10 * tens).name])
+        return DANISH_TENS[tens]
+    return options['seperator'].join([below_ten(ones), "og", DANISH_TENS[tens]])
 
 
 @format_name
 def below_twenty(n: int, **__) -> str:
     assert n < 20, "Number must be below 20"
-    return SmallDanishNumbers(n).name
+    return SMALL_DANISH_NUMBERS[n]
 
 
 @format_name
 def below_ten(n: int, **__) -> str:
-    return SmallDanishNumbers(n).name
+    return SMALL_DANISH_NUMBERS[n]
 
 
 if __name__ == '__main__':
