@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from number import NumberTooBig, get_number_name_danish
 from typing import Literal
 
-app = Flask(__name__)
+app = Flask('Danish number translator')
 
 
 @app.route("/", methods=["GET", "POST"])
