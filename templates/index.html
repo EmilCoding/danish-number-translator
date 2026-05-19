@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>FlaskBlog</title>
+</head>
+<body>
+    <div class="page">
+        <header class="header">
+            <h1>Danish Number Word Generator</h1>
+            <p class="description">Enter a positive integer and press Generate to convert it to Danish words.</p>
+        </header>
+
+        <main class="card">
+            <form method="post" novalidate>
+                <label for="number">Positive integer</label>
+                <input
+                    id="number"
+                    name="number"
+                    type="string"
+                    value="{{ value }}"
+                    placeholder="e.g. 123"
+                    required
+                >
+
+                <fieldset class="option-group">
+                    <legend>Separator</legend>
+                    <label>
+                        <input type="radio" name="seperator" value="none" {% if seperator == 'none' %}checked{% endif %}>
+                        None
+                    </label>
+                    <label>
+                        <input type="radio" name="seperator" value="space" {% if seperator == 'space' %}checked{% endif %}>
+                        Space
+                    </label>
+                    <label>
+                        <input type="radio" name="seperator" value="hyphen" {% if seperator == 'hyphen' %}checked{% endif %}>
+                        Hyphen
+                    </label>
+                </fieldset>
+
+                <fieldset class="option-group">
+                    <legend>Use “et” before hundred</legend>
+                    <label>
+                        <input type="radio" name="et_before_hundred" value="yes" {% if et_before_hundred %}checked{% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="et_before_hundred" value="no" {% if not et_before_hundred %}checked{% endif %}>
+                        No
+                    </label>
+                </fieldset>
+
+                <fieldset class="option-group">
+                    <legend>Use “et” before thousand</legend>
+                    <label>
+                        <input type="radio" name="et_before_thusind" value="yes" {% if et_before_thusind %}checked{% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="et_before_thusind" value="no" {% if not et_before_thusind %}checked{% endif %}>
+                        No
+                    </label>
+                </fieldset>
+
+                <fieldset class="option-group">
+                    <legend>Use “og” between large powers</legend>
+                    <label>
+                        <input type="radio" name="og_between_large_powers" value="yes" {% if og_between_large_powers %}checked{% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="og_between_large_powers" value="no" {% if not og_between_large_powers %}checked{% endif %}>
+                        No
+                    </label>
+                </fieldset>
+
+                <fieldset class="option-group">
+                    <legend>Conjugate large power names</legend>
+                    <label>
+                        <input type="radio" name="conjugate_large_power" value="yes" {% if conjugate_large_power %}checked{% endif %}>
+                        Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="conjugate_large_power" value="no" {% if not conjugate_large_power %}checked{% endif %}>
+                        No
+                    </label>
+                </fieldset>
+
+                <button type="submit">Generate</button>
+            </form>
+
+            <div class="result-block">
+                <h2>Result</h2>
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% elif result %}
+                    <p class="result">{{ result }}</p>
+                {% else %}
+                    <p class="hint">The Danish words for your number will appear here after pressing Generate.</p>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>
