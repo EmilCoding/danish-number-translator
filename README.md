@@ -1,7 +1,6 @@
 # Number in Danish
 
-Have you ever wondered what a number is called in Danish? Yes? Then you should definitly check out this package. Here you can convert any positive number (up to a given limit) into its Danish word representation.
-
+Have you ever wondered what a number is called in Danish? Yes? Then you should definitely check out this package. Here you can convert any positive number (up to a given limit) into its Danish word representation.
 
 ## Notation
 
@@ -24,13 +23,13 @@ The translator function $T: \mathbb{N} \rightarrow str$ maps any positive intege
 
 ## The tens
 
-The way Danish construct their numbers between twenty and a hundret, is to take the ones part and the tens part and combine them like this:
+The way Danish construct their numbers between twenty and a hundred is to take the ones part and the tens part and combine them like this:
 
 $$
     \text{Ones} + "\text{og}" + \text{tens}
 $$
 
-The tens can be found in the look-up table below.
+The tens can be found in the lookup table below.
 
 | Number | Danish     | Number | Danish     |
 | ------ | ------     | ------ | ------     |
@@ -43,34 +42,34 @@ The tens can be found in the look-up table below.
 An example is
 
 $$
-    55 = "Fem" + "og" + "Halvtreds" = "femoghalvtreds"
+    55 \rightarrow "Fem" + "og" + "Halvtreds" = "Femoghalvtreds"
 $$
 
 
-## From a 100 to 1000
+## From 100 to 1000
 
-A hundret in Danish is *hundrede*. To construct a number between 100 og 1000 there are different variations. In general, the number is constructed as
+A hundred in Danish is *hundrede*. To construct a number between 100 and 1000 there are different variations. In general, a three digit number is danish is constructed as so:
 $$
     T(abc) = T(a) + "hundrede" + T(bc)
 $$
-where *a*, *b*, and *c* are digites and $a \ne 0$. An example can be
+where *a*, *b*, and *c* are digits and $a \ne 0$. An example is
 $$
-    T(288) = "To" + "hundrede" + "otto" + "og" + "firs"
+    288 \rightarrow "To" + "hundrede" + "otte" + "og" + "firs"
+        = "Tohundredeotteogfirs"
 $$
 
 Variations:
 
 - You can add a "et" before *hundrede* when naming numbers between 100 and 200. So 101 would be "Et-hundrede-en".
-- You can add a *og* between the hundrets part and the tens part. So 151 would be *hundrede-og-en-og-halvtreds*.
-
+- You can add an *og* between the hundred part and the tens part. So 151 would be *hundrede-og-en-og-halvtreds*.
 
 ## Higher order
 
-Danish uses the long form of naming numbers. That is a thousand millions (*tusind millioner*) is called *en milliard* and thousand of those are called *en billion*. Compared to english where it goes
+Danish uses the long form of naming numbers. That is, a thousand millions (*tusind millioner*) is called *en milliard*, and thousands of those are called *en billion*. Compared to English, where it goes
 $$
     Million \rightarrow Billion \rightarrow Trillion \rightarrow ...
 $$
-the long form add extra form in between,
+the long form adds extra forms in between,
 $$
     Million \rightarrow Milliard \rightarrow Billion \rightarrow Billiard \rightarrow Trillion \rightarrow ...
 $$
