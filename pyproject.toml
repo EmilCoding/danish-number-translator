@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "DanishNumbers"
+version = "2026"
+requires-python = ">=3.12"
+authors = [{name = "ELB"}]
+maintainers = [{name = "ELB"}]
+
+description = "A tool to translate numbers into danish."
+readme = "README.md"
+keywords = ["translation", "danish", "numbers"]
+classifiers = [
+    "Natural Language :: Danish",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python"
+]
