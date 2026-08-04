@@ -8,7 +8,7 @@ version = "2026"
 requires-python = ">=3.12"
 authors = [{name = "ELB"}]
 maintainers = [{name = "ELB"}]
-
+license = "MIT"
 description = "A tool to translate numbers into danish."
 readme = "README.md"
 keywords = ["translation", "danish", "numbers"]

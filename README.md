@@ -2,6 +2,34 @@
 
 Have you ever wondered what a number is called in Danish? Yes? Then you should definitely check out this package. Here you can convert any positive number (up to a given limit) into its Danish word representation.
 
+
+![App Screenshot](path/to/demo.gif)
+
+<!-- [![Download Executable](https://img.shields.io/badge/Download-Latest_Release-blue?style=for-the-badge)](https://github.com/your-username/your-repo/releases/latest)
+[![Live Demo](https://img.shields.io/badge/Demo-Try_Online-green?style=for-the-badge)](https://your-demo-url.com) -->
+
+## ⚡ Quickstart (Running from Source)
+
+### Prerequisites
+* Python 3.12+
+* Git
+
+### Installation & Run
+
+```bash
+# Clone the repository
+git clone 'https://github.com/EmilCoding/danish-number-translator.git'
+cd your-repo
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Launch the app
+python main.py
+
+
+
+
 ## Notation
 
 The translator function $T: \mathbb{N} \rightarrow str$ maps any positive integer (in principle) to a string representation.

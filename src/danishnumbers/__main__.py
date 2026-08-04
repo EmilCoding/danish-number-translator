@@ -4,9 +4,9 @@ This module defines the web UI and form handling logic for converting
 integer input into Danish number names using the core translator in
 ``danishnumbers.number``.
 """
+from typing import Literal
 from flask import Flask, render_template, request
 from danishnumbers.number import NumberTooBig, get_number_name_danish
-from typing import Literal
 
 
 app = Flask('Danish number translator')
