@@ -2,11 +2,7 @@
 
 Have you ever wondered what a number is called in Danish? Yes? Then you should definitely check out this package. Here you can convert any positive number (up to a given limit) into its Danish word representation.
 
-
-![App Screenshot](./images/image.png)
-
-<!-- [![Download Executable](https://img.shields.io/badge/Download-Latest_Release-blue?style=for-the-badge)](https://github.com/your-username/your-repo/releases/latest)
-[![Live Demo](https://img.shields.io/badge/Demo-Try_Online-green?style=for-the-badge)](https://your-demo-url.com) -->
+![App Screenshot](./images/example.gif)
 
 ## ⚡ Quickstart (Running from Source)
 
