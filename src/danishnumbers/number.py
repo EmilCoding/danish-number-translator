@@ -8,41 +8,7 @@ The implementation uses Danish short-scale naming for numbers below one
 million and Danish long-scale power names for larger values.
 """
 from typing import TypedDict, Unpack
-from danishnumbers.large_prefix_generator import prefix_generator
-
-
-POWERS_OF_THOUSANDS = (
-    'Million', 'Milliard',
-    'Billion', 'Billiard',
-    'Trillion', 'Trilliard',
-    'Kvadrillion', 'Kvadrilliard',
-    'Kvintillion', 'Kvintilliard',
-    'Sekstillion', 'Sekstilliard',
-    'Septillion', 'Septilliard',
-    'Oktillion', 'Oktilliard',
-    'Nonillion', 'Nonilliard',
-    'Decillion', 'Decilliard',
-    'hendekallion', 'hendekalliard',
-    'dodekallion', 'dodekalliard',
-    'triskaidekallion', 'triskaidekalliard',
-    'tettareskaidekallion', 'tettareskaidekalliard',
-    'pentekaidekallion', 'pentekaidekalliard',
-    'hekkaidekallion', 'hekkaidekalliard',
-    'heptakaidekallion', 'heptakaidekalliard',
-    'oktokaidekallion', 'oktokaidekalliard',
-    'enneakaidekallion', 'enneakaidekalliard',
-    'eikosillion', 'eikosilliard',
-    'heiskaieikosillion', 'heiskaieikosillard',
-    'duokaieikosillion', 'duokaieikosillard',
-    'triskaieikosillion', 'triskaieikosillard',
-    'tetterakaieikosillion', 'tetterakaieikosillard',
-    'pentekaieikosillion', 'pentekaieikosillard',
-    'hekkaieikosillion', 'hekkaieikosillard',
-    'heptakaieikosillion', 'heptakaieikosillard',
-    'oktokaieikosillion', 'oktokaieikosillard',
-    'enneakaieikosillion', 'enneakaieikosillard',
-    'heiskaitriakontallion', 'heiskaitriakontallard',
-)
+from danishnumbers.large_prefix_generator import DegreeTooHigh, prefix_generator
 
 
 class NumberTooBig(Exception):
@@ -54,8 +20,9 @@ class NumberTooBig(Exception):
 
 class FormatOptions(TypedDict):
     """Formatting options used throughout Danish number translation."""
-
+    longform: bool
     seperator: str
+    in_prefix_seperator: str
     et_before_hundred: bool
     et_before_thousands: bool
 
@@ -96,13 +63,6 @@ DANISH_TENS = {
 }
 
 
-DEFAULT_FORMAT_OPTIONS: FormatOptions = {
-    'seperator': "",
-    'et_before_hundred': True,
-    'et_before_thousands': True,
-}
-
-
 def with_default_options(func):
     """Wrap a translator so default format options are applied.
 
@@ -114,11 +74,15 @@ def with_default_options(func):
         n: int,
         /,
         seperator="",
+        in_prefix_seperator="",
+        longform=True,
         et_before_hundred=True,
         et_before_thousands=True,
     ) -> str:
         options: FormatOptions = {
+            "longform": True,
             "seperator": seperator,
+            "in_prefix_seperator": in_prefix_seperator,
             "et_before_hundred": et_before_hundred,
             "et_before_thousands": et_before_thousands,
         }
@@ -150,22 +114,23 @@ def get_name(n: int, **options: Unpack[FormatOptions]) -> str:
     remainding, segment = divmod(n, 1_000_000)
     parts_of_word_reverse_order = [_below_a_million(segment, **options), ]
 
-    for prefix in POWERS_OF_THOUSANDS:
-        if remainding == 0:
-            break
-        remainding, segment = divmod(remainding, 1_000)
-        match segment:
-            case 0:
-                pass
-            case 1:
-                parts_of_word_reverse_order.append(options['seperator'].join(["En", prefix]))
-            case int():
-                parts_of_word_reverse_order.append(
-                    options['seperator'].join([_below_a_thousand(segment, **options), prefix])
-                )
-
-    if remainding > 0:
+    try:
+        for _, prefix in prefix_generator(options['longform'], options['in_prefix_seperator']):
+            if remainding == 0:
+                break
+            remainding, segment = divmod(remainding, 1_000)
+            match segment:
+                case 0:
+                    pass
+                case 1:
+                    parts_of_word_reverse_order.append(options['seperator'].join(["En", prefix]))
+                case int():
+                    parts_of_word_reverse_order.append(
+                        options['seperator'].join([_below_a_thousand(segment, **options), prefix])
+                    )
+    except DegreeTooHigh:
         raise NumberTooBig(n)
+
     return options['seperator'].join(parts_of_word_reverse_order[::-1]).title()
 
 
@@ -243,5 +208,4 @@ if __name__ == '__main__':
     for n in range(20):
         value = 2**(2**n)
         print(f"{n}: {value}: {get_name(value, seperator="-")}")
-
     print(f"{get_name(1_000_000_001)=}")
