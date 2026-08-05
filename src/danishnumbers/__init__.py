@@ -1,1 +1,1 @@
-from danishnumbers.number import get_number_name_danish
+from danishnumbers.number import get_name

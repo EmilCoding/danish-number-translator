@@ -10,12 +10,12 @@
     <div class="page">
         <header class="header">
             <h1>Danish Number Word Generator</h1>
-            <p class="description">Enter a positive integer and press Generate to convert it to Danish words.</p>
+            <p class="description">Enter a non-negative integer and press Generate to convert it to Danish words.</p>
         </header>
 
         <main class="card">
             <form method="post" novalidate>
-                <label for="number">Positive integer</label>
+                <label for="number">Non-negative integer</label>
                 <input
                     id="number"
                     name="number"
@@ -56,35 +56,11 @@
                 <fieldset class="option-group">
                     <legend>Use “et” before thousand</legend>
                     <label>
-                        <input type="radio" name="et_before_thusind" value="yes" {% if et_before_thusind %}checked{% endif %}>
+                        <input type="radio" name="et_before_thousand" value="yes" {% if et_before_thousand %}checked{% endif %}>
                         Yes
                     </label>
                     <label>
-                        <input type="radio" name="et_before_thusind" value="no" {% if not et_before_thusind %}checked{% endif %}>
-                        No
-                    </label>
-                </fieldset>
-
-                <fieldset class="option-group">
-                    <legend>Use “og” between large powers</legend>
-                    <label>
-                        <input type="radio" name="og_between_large_powers" value="yes" {% if og_between_large_powers %}checked{% endif %}>
-                        Yes
-                    </label>
-                    <label>
-                        <input type="radio" name="og_between_large_powers" value="no" {% if not og_between_large_powers %}checked{% endif %}>
-                        No
-                    </label>
-                </fieldset>
-
-                <fieldset class="option-group">
-                    <legend>Conjugate large power names</legend>
-                    <label>
-                        <input type="radio" name="conjugate_large_power" value="yes" {% if conjugate_large_power %}checked{% endif %}>
-                        Yes
-                    </label>
-                    <label>
-                        <input type="radio" name="conjugate_large_power" value="no" {% if not conjugate_large_power %}checked{% endif %}>
+                        <input type="radio" name="et_before_thousand" value="no" {% if not et_before_thousand %}checked{% endif %}>
                         No
                     </label>
                 </fieldset>

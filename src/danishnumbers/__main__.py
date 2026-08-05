@@ -6,7 +6,7 @@ integer input into Danish number names using the core translator in
 """
 from typing import Literal
 from flask import Flask, render_template, request
-from danishnumbers.number import NumberTooBig, get_number_name_danish
+from danishnumbers.number import NumberTooBig, get_name
 
 
 app = Flask('Danish number translator')
@@ -29,36 +29,30 @@ def index():
     error = ""
     seperator = "space"
     et_before_hundred = True
-    et_before_thusind = True
-    og_between_large_powers = False
-    conjugate_large_power = True
+    et_before_thousands = True
 
     if request.method == "POST":
         value = handle_raw_input(request.form.get("number", ""))
         seperator = request.form.get("seperator", "space")
         et_before_hundred = request.form.get("et_before_hundred", "yes") == "yes"
-        et_before_thusind = request.form.get("et_before_thusind", "yes") == "yes"
-        og_between_large_powers = request.form.get("og_between_large_powers", "no") == "yes"
-        conjugate_large_power = request.form.get("conjugate_large_power", "yes") == "yes"
+        et_before_thousands = request.form.get("et_before_thusind", "yes") == "yes"
 
-        if not value:
-            error = "Please enter a positive integer."
+        if value is None:
+            error = "Please enter a non-negative integer."
         else:
             try:
                 if value < 0:
                     raise ValueError('Negative')
-                result = get_number_name_danish(
+                result = get_name(
                     value,
                     seperator=get_separator(seperator),
                     et_before_hundred=et_before_hundred,
-                    et_before_thusind=et_before_thusind,
-                    og_between_large_powers=og_between_large_powers,
-                    conjugate_large_power=conjugate_large_power,
+                    et_before_thousands=et_before_thousands,
                 )
             except ValueError:
-                error = "Please enter a valid positive integer."
+                error = "Please enter a valid non-negative integer."
             except NumberTooBig:
-                error = "That number is too large. Enter a smaller positive integer."
+                error = "That number is too large. Enter a smaller non-negative integer."
 
     return render_template(
         "index.html",
@@ -67,9 +61,7 @@ def index():
         error=error,
         seperator=seperator,
         et_before_hundred=et_before_hundred,
-        et_before_thusind=et_before_thusind,
-        og_between_large_powers=og_between_large_powers,
-        conjugate_large_power=conjugate_large_power,
+        et_before_thusind=et_before_thousands,
     )
 
 
