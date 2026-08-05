@@ -25,7 +25,7 @@
                     required
                 >
 
-                <fieldset class="option-group">
+                <fieldset class="option-group option-group--horizontal">
                     <legend>Separator</legend>
                     <label>
                         <input type="radio" name="seperator" value="none" {% if seperator == 'none' %}checked{% endif %}>
@@ -42,29 +42,16 @@
                 </fieldset>
 
                 <fieldset class="option-group">
-                    <legend>Use “et” before hundred</legend>
+                    <legend>Options</legend>
                     <label>
-                        <input type="radio" name="et_before_hundred" value="yes" {% if et_before_hundred %}checked{% endif %}>
-                        Yes
+                        <input type="checkbox" name="et_before_hundrede" value="yes" {% if et_before_hundrede %}checked{% endif %}>
+                        Et before hundred
                     </label>
                     <label>
-                        <input type="radio" name="et_before_hundred" value="no" {% if not et_before_hundred %}checked{% endif %}>
-                        No
-                    </label>
-                </fieldset>
-
-                <fieldset class="option-group">
-                    <legend>Use “et” before thousand</legend>
-                    <label>
-                        <input type="radio" name="et_before_thousand" value="yes" {% if et_before_thousand %}checked{% endif %}>
-                        Yes
-                    </label>
-                    <label>
-                        <input type="radio" name="et_before_thousand" value="no" {% if not et_before_thousand %}checked{% endif %}>
-                        No
+                        <input type="checkbox" name="et_before_tusinde" value="yes" {% if et_before_tusinde %}checked{% endif %}>
+                        Et before tusinde
                     </label>
                 </fieldset>
-
                 <button type="submit">Generate</button>
             </form>
 

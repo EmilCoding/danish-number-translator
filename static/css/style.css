@@ -67,6 +67,19 @@ label {
     margin-bottom: 0.5rem;
 }
 
+.option-group--horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.option-group--horizontal label {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
 .option-group input[type="radio"] {
     margin-right: 0.65rem;
 }

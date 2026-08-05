@@ -2,9 +2,11 @@ import pytest
 from danishnumbers.number import FormatOptions, _below_twenty, _below_a_hundret, _below_a_thousand, _below_a_million
 
 OPTIONS: FormatOptions = {
+    'longform': True,
     'seperator': " ",
-    'et_before_hundred': True,
-    'et_before_thousands': True,
+    'in_prefix_seperator': "",
+    'et_before_hundrede': True,
+    'et_before_tusinde': True,
 }
 
 

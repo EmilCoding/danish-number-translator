@@ -28,14 +28,14 @@ def index():
     result = ""
     error = ""
     seperator = "space"
-    et_before_hundred = True
-    et_before_thousands = True
+    et_before_hundrede = True
+    et_before_tusinde = True
 
     if request.method == "POST":
         value = handle_raw_input(request.form.get("number", ""))
         seperator = request.form.get("seperator", "space")
-        et_before_hundred = request.form.get("et_before_hundred", "yes") == "yes"
-        et_before_thousands = request.form.get("et_before_thusind", "yes") == "yes"
+        et_before_hundrede = request.form.get("et_before_hundrede") == "yes"
+        et_before_tusinde = request.form.get("et_before_tusinde") == "yes"
 
         if value is None:
             error = "Please enter a non-negative integer."
@@ -46,8 +46,8 @@ def index():
                 result = get_name(
                     value,
                     seperator=get_separator(seperator),
-                    et_before_hundred=et_before_hundred,
-                    et_before_thousands=et_before_thousands,
+                    et_before_hundrede=et_before_hundrede,
+                    et_before_tusinde=et_before_tusinde,
                 )
             except ValueError:
                 error = "Please enter a valid non-negative integer."
@@ -60,8 +60,8 @@ def index():
         result=result,
         error=error,
         seperator=seperator,
-        et_before_hundred=et_before_hundred,
-        et_before_thusind=et_before_thousands,
+        et_before_hundrede=et_before_hundrede,
+        et_before_tusinde=et_before_tusinde,
     )
 
 

@@ -23,8 +23,8 @@ class FormatOptions(TypedDict):
     longform: bool
     seperator: str
     in_prefix_seperator: str
-    et_before_hundred: bool
-    et_before_thousands: bool
+    et_before_hundrede: bool
+    et_before_tusinde: bool
 
 
 SMALL_DANISH_NUMBERS = {
@@ -76,15 +76,15 @@ def with_default_options(func):
         seperator="",
         in_prefix_seperator="",
         longform=True,
-        et_before_hundred=True,
-        et_before_thousands=True,
+        et_before_hundrede=True,
+        et_before_tusinde=True,
     ) -> str:
         options: FormatOptions = {
             "longform": True,
             "seperator": seperator,
             "in_prefix_seperator": in_prefix_seperator,
-            "et_before_hundred": et_before_hundred,
-            "et_before_thousands": et_before_thousands,
+            "et_before_hundrede": et_before_hundrede,
+            "et_before_tusinde": et_before_tusinde,
         }
         return func(n, **options)
     return caller
@@ -144,7 +144,7 @@ def _below_a_million(n: int, **options: Unpack[FormatOptions]) -> str:
         case 0:
             thousands_part = ""
         case 1:
-            thousands_part = f"et{options['seperator']}tusind" if options['et_before_thousands'] else "tusind"
+            thousands_part = f"et{options['seperator']}tusind" if options['et_before_tusinde'] else "tusind"
         case int():
             thousands_part = options['seperator'].join([_below_a_thousand(thousands, **options), "tusinde"])
 
@@ -166,7 +166,7 @@ def _below_a_thousand(n: int, **options: Unpack[FormatOptions]) -> str:
         case 0:
             return _below_a_hundret(n, **options)
         case 1:
-            word_parts.append("Et") if options['et_before_hundred'] else None
+            word_parts.append("Et") if options['et_before_hundrede'] else None
         case int():
             word_parts.append(_below_ten(hundrets, **options))
     word_parts.append("hundrede")
