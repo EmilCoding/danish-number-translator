@@ -7,10 +7,8 @@ values up to the supported maximum and optional formatting settings.
 The implementation uses Danish short-scale naming for numbers below one
 million and Danish long-scale power names for larger values.
 """
-
-import enum
-import functools
-from typing import Any, NotRequired, TypedDict, Unpack
+from typing import TypedDict, Unpack
+from danishnumbers.large_prefix_generator import prefix_generator
 
 
 POWERS_OF_THOUSANDS = (
