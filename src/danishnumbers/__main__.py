@@ -39,18 +39,16 @@ def index():
 
         if value is None:
             error = "Please enter a non-negative integer."
+        elif value < 0:
+            error = "Please enter a valid non-negative integer."
         else:
             try:
-                if value < 0:
-                    raise ValueError('Negative')
                 result = get_name(
                     value,
                     seperator=get_separator(seperator),
                     et_before_hundrede=et_before_hundrede,
                     et_before_tusinde=et_before_tusinde,
                 )
-            except ValueError:
-                error = "Please enter a valid non-negative integer."
             except NumberTooBig:
                 error = "That number is too large. Enter a smaller non-negative integer."
 

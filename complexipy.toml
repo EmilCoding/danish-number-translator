@@ -1,0 +1,3 @@
+# complexipy.toml or .complexipy.toml
+paths = ["src", "tests"]
+max-complexity-allowed = 10
