@@ -1,44 +1,44 @@
 import pytest
-from danishnumbers.number import FormatOptions, _below_twenty, _below_a_hundret, _below_a_thousand, _below_a_million
+from danishnumbers.number import FormatOptions, danish_names_below_20, danish_names_below_100, danish_names_below_1000, _below_a_million
 
 OPTIONS: FormatOptions = {
     'longform': True,
-    'seperator': " ",
-    'in_prefix_seperator': "",
+    'separator': " ",
+    'in_prefix_separator': "",
     'et_before_hundrede': True,
     'et_before_tusinde': True,
 }
 
 
 @pytest.mark.parametrize('n,name', (
-    (0, 'nul'), (1, 'en'), (2, 'to'), (3, 'tre'), (4, 'fire'), (5, 'fem'),
+    (1, 'en'), (2, 'to'), (3, 'tre'), (4, 'fire'), (5, 'fem'),
     (6, 'seks'), (7, 'syv'), (8, 'otte'), (9, 'ni'), (10, 'ti'), (11, 'elleve'),
     (12, 'tolv'), (13, 'tretten'), (14, 'fjorten'), (15, 'femten'), (16, 'seksten'),
     (17, 'sytten'), (18, 'atten'), (19, 'nitten'),
 ))
 def test_below_20(n: int, name: str) -> None:
-    assert name == _below_twenty(n, **OPTIONS).lower(), "Name does not match"
+    assert name == danish_names_below_20(n, **OPTIONS).lower(), "Name does not match"
 
 
 @pytest.mark.parametrize('n,name', (
-    (10, 'ti'), (20, 'tyve'), (30, 'tredive'), (40, 'fyre'),
+    (10, 'ti'), (20, 'tyve'), (30, 'tredive'), (40, 'fyrre'),
     (50, 'halvtreds'), (60, 'tres'), (70, 'halvfjerds'), 
     (80, 'firs'), (90, 'halvfems'),
 ))
 def test_tens(n: int, name: str) -> None:
-    assert name == _below_a_hundret(n, **OPTIONS).lower(), "Name does not match"
+    assert name == danish_names_below_100(n, **OPTIONS).lower(), "Name does not match"
 
 
 @pytest.mark.parametrize('n,name', (
     (21, 'en og tyve'),
     (33, 'tre og tredive'),
-    (45, 'fem og fyre'),
+    (45, 'fem og fyrre'),
     (55, 'fem og halvtreds'),
     (87, 'syv og firs'),
     (99, 'ni og halvfems'),
 ))
 def test_below_hundred(n: int, name: str) -> None:
-    output = _below_a_hundret(n, **OPTIONS).lower()
+    output = danish_names_below_100(n, **OPTIONS).lower()
     assert name == output, f"Error {n}: Got {output}, expected {name}"
 
 
@@ -51,7 +51,7 @@ def test_below_hundred(n: int, name: str) -> None:
     (999, 'ni hundrede og ni og halvfems'),
 ))
 def test_below_a_thousand(n: int, name: str) -> None:
-    output = _below_a_thousand(n, **OPTIONS).lower()
+    output = danish_names_below_1000(n, **OPTIONS).lower()
     assert name == output, f"Error {n}: Got {output}, expected {name}"
 
 

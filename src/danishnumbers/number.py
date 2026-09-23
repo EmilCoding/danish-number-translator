@@ -7,7 +7,8 @@ values up to the supported maximum and optional formatting settings.
 The implementation uses Danish short-scale naming for numbers below one
 million and Danish long-scale power names for larger values.
 """
-from typing import TypedDict, Unpack
+from typing import Any, TypedDict, Unpack
+from danishnumbers.positive_integer import check_bounds
 from danishnumbers.large_prefix_generator import DegreeTooHigh, prefix_generator
 
 
@@ -21,13 +22,13 @@ class NumberTooBig(Exception):
 class FormatOptions(TypedDict):
     """Formatting options used throughout Danish number translation."""
     longform: bool
-    seperator: str
-    in_prefix_seperator: str
+    separator: str
+    in_prefix_separator: str
     et_before_hundrede: bool
     et_before_tusinde: bool
 
 
-SMALL_DANISH_NUMBERS = {
+SMALL_DANISH_NUMBERS: dict[int, str] = {
     0: 'nul',
     1: 'en',
     2: 'to',
@@ -50,17 +51,114 @@ SMALL_DANISH_NUMBERS = {
     19: 'nitten',
 }
 
-DANISH_TENS = {
-    1: 'ti',
-    2: 'tyve',
-    3: 'tredive',
-    4: 'fyre',
-    5: 'halvtreds',
-    6: 'tres',
-    7: 'halvfjerds',
-    8: 'firs',
-    9: 'halvfems',
+DANISH_TENS: dict[int, str] = {
+    10: 'ti',
+    20: 'tyve',
+    30: 'tredive',
+    40: 'fyrre',
+    50: 'halvtreds',
+    60: 'tres',
+    70: 'halvfjerds',
+    80: 'firs',
+    90: 'halvfems',
 }
+
+
+
+def danish_number_name(n: int, **__: Any) -> str:
+    ...
+
+
+@check_bounds(max_value=1_000_000)
+def danish_names_below_a_million(n: int, **__: Any) -> str:
+    ...
+
+
+@check_bounds(max_value=1_000)
+def danish_names_below_1000(
+    n: int,
+    separator: str = "",
+    et_before_hundrede: bool = True,
+    **__: Any
+) -> str:
+    """Return the danish name for a number below 1000.
+
+    Args:
+        n (int): Number to be translated.
+
+    Kwargs:
+        separator (str, optional): Separator between segments or word.
+          Eg. if separator is '-' the 21 is "en-og-tyve". Defaults to "".
+        et_before_hundrede (bool, optional): If True, "et" if put in front of single digit hundreds
+          Eg. 117 becomes "et-hundrede-og-sytten" insted of "hundrede-og-sytten". Defaults to True.
+
+    Returns:
+        str: Name of the number ´n´ in danish.
+    """
+    parts: list[str] = []
+    hundreds, rest = divmod(n, 100)
+
+    # Add hundrets part
+    if hundreds == 0:
+        pass
+    elif hundreds == 1 and et_before_hundrede:
+        parts.append('et')
+    else:
+        parts.append(danish_names_below_10(hundreds))
+    parts.append("hundrede")
+
+    # Add tens parts
+    if rest > 0:
+        parts += ['og', danish_names_below_100(rest, separator)]
+
+    return separator.join(parts)
+
+
+@check_bounds(max_value=100)
+def danish_names_below_100(n: int, separator: str = "", **__: Any) -> str:
+    """Return the danish name of a positive integer below 100.
+
+    Args:
+        n (int): Number to be translated.
+        separator (str, optional): Separator between segments or word.
+          Example if separator is '-' the 21 is "en-og-tyve". Defaults to "".
+
+    Returns:
+        str: Danish name of a number below 1_000.
+    """
+    if n < 20:
+        return danish_names_below_20(n)
+    if (name := DANISH_TENS.get(n, None)):
+        return name
+    tens, ones = divmod(n, 10)
+    return separator.join([danish_names_below_10(ones), "og", DANISH_TENS[10*tens]])
+
+
+@check_bounds(max_value=20)
+def danish_names_below_20(n: int, **__: Any) -> str:
+    """Return the danish name of a positive integer below 20."""
+    return SMALL_DANISH_NUMBERS[n]
+
+
+@check_bounds(max_value=10)
+def danish_names_below_10(n: int, **__: Any) -> str:
+    """Return the danish name of a positive integer below 10."""
+    return SMALL_DANISH_NUMBERS[n]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def with_default_options(func):
@@ -73,16 +171,16 @@ def with_default_options(func):
     def caller(
         n: int,
         /,
-        seperator="",
-        in_prefix_seperator="",
+        separator="",
+        in_prefix_separator="",
         longform=True,
         et_before_hundrede=True,
         et_before_tusinde=True,
     ) -> str:
         options: FormatOptions = {
             "longform": True,
-            "seperator": seperator,
-            "in_prefix_seperator": in_prefix_seperator,
+            "separator": separator,
+            "in_prefix_separator": in_prefix_separator,
             "et_before_hundrede": et_before_hundrede,
             "et_before_tusinde": et_before_tusinde,
         }
@@ -115,7 +213,7 @@ def get_name(n: int, **options: Unpack[FormatOptions]) -> str:
     parts_of_word_reverse_order = [_below_a_million(segment, **options), ]
 
     try:
-        for _, prefix in prefix_generator(options['longform'], options['in_prefix_seperator']):
+        for _, prefix in prefix_generator(options['longform'], options['in_prefix_separator']):
             if remainding == 0:
                 break
             remainding, segment = divmod(remainding, 1_000)
@@ -123,15 +221,15 @@ def get_name(n: int, **options: Unpack[FormatOptions]) -> str:
                 case 0:
                     pass
                 case 1:
-                    parts_of_word_reverse_order.append(options['seperator'].join(["En", prefix]))
+                    parts_of_word_reverse_order.append(options['separator'].join(["En", prefix]))
                 case int():
                     parts_of_word_reverse_order.append(
-                        options['seperator'].join([_below_a_thousand(segment, **options), prefix])
+                        options['separator'].join([danish_names_below_1000(segment, **options), prefix])
                     )
     except DegreeTooHigh:
         raise NumberTooBig(n)
 
-    return options['seperator'].join(parts_of_word_reverse_order[::-1]).title()
+    return options['separator'].join(parts_of_word_reverse_order[::-1]).title()
 
 
 @with_default_options
@@ -144,68 +242,17 @@ def _below_a_million(n: int, **options: Unpack[FormatOptions]) -> str:
         case 0:
             thousands_part = ""
         case 1:
-            thousands_part = f"et{options['seperator']}tusind" if options['et_before_tusinde'] else "tusind"
+            thousands_part = f"et{options['separator']}tusind" if options['et_before_tusinde'] else "tusind"
         case int():
-            thousands_part = options['seperator'].join([_below_a_thousand(thousands, **options), "tusinde"])
+            thousands_part = options['separator'].join([danish_names_below_1000(thousands, **options), "tusinde"])
 
     if rest == 0:
         return thousands_part
-    return options['seperator'].join([thousands_part, _below_a_thousand(rest, **options)])
-
-
-@with_default_options
-def _below_a_thousand(n: int, **options: Unpack[FormatOptions]) -> str:
-    """Return the Danish word form of a non-negative integer below a thousand."""
-    assert isinstance(n, int) and 0 <= n < 1000, "Must be integer between 0 and 1000."
-    hundrets, rest = divmod(n, 100)
-
-    word_parts: list[str] = []
-
-    # Define thousands part
-    match hundrets:
-        case 0:
-            return _below_a_hundret(n, **options)
-        case 1:
-            word_parts.append("Et") if options['et_before_hundrede'] else None
-        case int():
-            word_parts.append(_below_ten(hundrets, **options))
-    word_parts.append("hundrede")
-
-    # Define ones part
-    word_parts += ["og", _below_a_hundret(rest, **options)] if rest > 0 else []
-
-    return options['seperator'].join(word_parts)
-
-
-@with_default_options
-def _below_a_hundret(n: int, **options: Unpack[FormatOptions]) -> str:
-    """Return the Danish name for a number below 100."""
-    assert isinstance(n, int) and 0 <= n < 100, "Number must be a non-negative integer below 100"
-    match divmod(n, 10):
-        case (0, int()) | (1, int()):
-            return _below_twenty(n, **options)
-        case (tens, 0):
-            return DANISH_TENS[tens]
-        case (tens, ones):
-            return options['seperator'].join([_below_ten(ones, **options), "og", DANISH_TENS[tens]])
-
-
-@with_default_options
-def _below_twenty(n: int, **options: Unpack[FormatOptions]) -> str:
-    """Return the Danish name for a number below 20."""
-    assert isinstance(n, int) and 0 <= n < 20, "Number must be a non-negative integer below 20"
-    return SMALL_DANISH_NUMBERS[n]
-
-
-@with_default_options
-def _below_ten(n: int, **options: Unpack[FormatOptions]) -> str:
-    """Return the Danish name for a number below 10."""
-    assert isinstance(n, int) and 0 <= n < 10, "Number must be a non-negative integer below 10"
-    return SMALL_DANISH_NUMBERS[n]
+    return options['separator'].join([thousands_part, danish_names_below_1000(rest, **options)])
 
 
 if __name__ == '__main__':
     for n in range(20):
         value = 2**(2**n)
-        print(f"{n}: {value}: {get_name(value, seperator="-")}")
+        print(f"{n}: {value}: {get_name(value, separator="-")}")
     print(f"{get_name(1_000_000_001)=}")
