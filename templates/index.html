@@ -28,16 +28,40 @@
                 <fieldset class="option-group option-group--horizontal">
                     <legend>Separator</legend>
                     <label>
-                        <input type="radio" name="seperator" value="none" {% if seperator == 'none' %}checked{% endif %}>
+                        <input type="radio" name="separator" value="" {% if separator == '' %}checked{% endif %}>
                         None
                     </label>
                     <label>
-                        <input type="radio" name="seperator" value="space" {% if seperator == 'space' %}checked{% endif %}>
+                        <input type="radio" name="separator" value=" " {% if separator == ' ' %}checked{% endif %}>
                         Space
                     </label>
                     <label>
-                        <input type="radio" name="seperator" value="hyphen" {% if seperator == 'hyphen' %}checked{% endif %}>
+                        <input type="radio" name="separator" value="-" {% if separator == '-' %}checked{% endif %}>
                         Hyphen
+                    </label>
+                    <label>
+                        <input type="radio" name="separator" value="." {% if separator == '.' %}checked{% endif %}>
+                        Dot
+                    </label>
+                </fieldset>
+
+                <fieldset class="option-group option-group--horizontal">
+                    <legend>In-prefix separator</legend>
+                    <label>
+                        <input type="radio" name="in_prefix_separator" value="" {% if in_prefix_separator == '' %}checked{% endif %}>
+                        None
+                    </label>
+                    <label>
+                        <input type="radio" name="in_prefix_separator" value=" " {% if in_prefix_separator == ' ' %}checked{% endif %}>
+                        Space
+                    </label>
+                    <label>
+                        <input type="radio" name="in_prefix_separator" value="-" {% if in_prefix_separator == '-' %}checked{% endif %}>
+                        Hyphen
+                    </label>
+                    <label>
+                        <input type="radio" name="in_prefix_separator" value="." {% if in_prefix_separator == '.' %}checked{% endif %}>
+                        Dot
                     </label>
                 </fieldset>
 
@@ -50,6 +74,10 @@
                     <label>
                         <input type="checkbox" name="et_before_tusinde" value="yes" {% if et_before_tusinde %}checked{% endif %}>
                         Et before tusinde
+                    </label>
+                    <label>
+                        <input type="checkbox" name="group_hundreds_and_thousands_digit" value="yes" {% if group_hundreds_and_thousands_digit %}checked{% endif %}>
+                        Group hundreds and thousands digit
                     </label>
                 </fieldset>
                 <button type="submit">Generate</button>

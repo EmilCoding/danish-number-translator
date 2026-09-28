@@ -1,5 +1,5 @@
 import pytest
-from danishnumbers import get_name
+from danishnumbers import danish_number_name
 
 
 GIANT_NUMBER = int('0x' + 1023*'F', base=16)
@@ -15,9 +15,9 @@ GIANT_NUMBER = int('0x' + 1023*'F', base=16)
     4019464748,
 ])
 def test_runs_at_all(n: int) -> None:
-    number = get_name(n)
+    number = danish_number_name(n)
     assert isinstance(number, str) and number != "", f"Error for {hex(n)}"
 
 
 def test_giant_number() -> None:
-    _ = get_name(GIANT_NUMBER)
+    _ = danish_number_name(GIANT_NUMBER)

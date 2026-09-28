@@ -85,7 +85,7 @@ The keen eyed amoung you would notice the prefix of *halv-* before 50, 70, and 9
 
 #### 60 and 80
 
-- *Treds* (60) is a short version of *tresenstyvende* \[[8](https://ordnet.dk/ddo/ordbog/tres)\] which comes from three times twenty. The same is true *firs* (80) being four times twenty.
+*Treds* (60) is a short version of *tresenstyvende* \[[8](https://ordnet.dk/ddo/ordbog/tres)\] which comes from three times twenty. The same is true *firs* (80) being four times twenty.
 
 #### 50, 70, and 90.
 
@@ -123,9 +123,33 @@ For numbers such as 101, you are free to choose if you put an "et" before "hundr
 
 To make both options possible, the `et_before_hundrede` flag can be toggled in the `danish_names_below_1000` and `danish_number_name` functions.
 
-## Numbers below a million
+## Numbers from thousand to a million
 
-...
+1000 is *tusinde* in danish. Again we see a resemblance to english. In the same way in english, all numbers between a thousand and a million is names as following:
+
+*How many thousands?* + "tusinde" + "og" + *rest*. 
+
+For example:
+- 2000 is "totusinde", which is a combination of "to" (two) and "tusinde" (thousand), since $2000 = 2 \times 1000$.
+- 10,000 is "titusinde", which is a combination of "ti" (ten) and "tusinde" (thousand), since $10,000 = 10 \times 1000$
+- 31,000 is "etogtredivetusinde", which is a combination of "enogtredive" (thirtyone) and "tusinde" (thousand), since $31,000 = 31 \times 1000$
+- 123,235 is 123 thousands and 205, which yields the name "hundredeogtreogtyvetusindetohundedeogfemogtredive", since $123,235 = 123 \times 1000 + 235$. The name is therefore a combination of 
+  - "hundredeogtreogtyve", which is 123, see section on [numbers below 1000](#numbers-between-100-and-1000).
+  - "tusinde", which is a thousand.
+  - "tohundedeogfemogtredive", which is 235. Again see section on [numbers below 1000](#numbers-between-100-and-1000) 
+
+
+There are some expection thou:
+
+1. A number such as 1099 is **NOT** called "tusindenioghalvfems". Instead a little "og" (and) is squeezed in between "tusinde" (thousands) and "nioghalvfems" (99). This is true for all numbers where the hundrets digit is zero. So 1001 is "tusindeogen" or "tusindeoget" depending on the gender og the word after it.
+
+2. If the hundreds digit is 1, such as en 2100, then a "en" (one) is **ALWAYS** put in front of the hundrets. So 2100 is "totusindeethundrede" ("two" + "thousands" + "one" + "hundred").
+
+3. For numbers below 10,000, some people group the thousands and hundreds digits together so that 1100 becomes "ellevehundrede" (ellevehundreds) and 5400 becomes "firoghalvtredshundrede" (fiftyfourhundreds). The expection here is multiples of a thousands. So 1000, 2000, 3000, etc. is still "tusinde", "totusinde", "tretusinde", etc. This can be toggled using `group_hundreds_and_thousands_digit`
+
+4. In the same way as for single hundrets, single thousand numbers can have an "et" (one) put in front of it. So 1000 can either be "tusinde" or "**et**tusinde". Can be toggled by the option `et_before_tusinde`
+
+This is implemented in the functions `danish_names_below_a_million`.
 
 
 ## Above a millon

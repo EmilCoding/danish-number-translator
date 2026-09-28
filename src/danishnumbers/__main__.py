@@ -6,8 +6,16 @@ integer input into Danish number names using the core translator in
 """
 from typing import Literal
 from flask import Flask, render_template, request
-from danishnumbers.number import NumberTooBig, get_name
+from danishnumbers import NumberTooBig, FormatOptions, danish_number_name
 
+
+DEFAULT_OPTIONS = FormatOptions(
+    separator="-",
+    in_prefix_separator=".",
+    et_before_hundrede=True,
+    et_before_tusinde=True,
+    group_hundreds_and_thousands_digit=False,
+)
 
 app = Flask('Danish number translator')
 
@@ -18,7 +26,7 @@ def index():
 
     On GET requests, the form is shown with default options. On POST requests,
     the submitted number and formatting options are validated and passed to
-    ``get_number_name_danish``. Any validation or conversion errors are
+    ``danish_number_name``. Any validation or conversion errors are
     returned to the template as an error message.
 
     Returns:
@@ -27,15 +35,15 @@ def index():
     value = ""
     result = ""
     error = ""
-    seperator = "space"
-    et_before_hundrede = True
-    et_before_tusinde = True
+    options = DEFAULT_OPTIONS.copy()
 
     if request.method == "POST":
         value = handle_raw_input(request.form.get("number", ""))
-        seperator = request.form.get("seperator", "space")
-        et_before_hundrede = request.form.get("et_before_hundrede") == "yes"
-        et_before_tusinde = request.form.get("et_before_tusinde") == "yes"
+        options['separator'] = request.form.get("separator", DEFAULT_OPTIONS["separator"])
+        options["in_prefix_separator"] = request.form.get("in_prefix_separator", ".")
+        options['et_before_hundrede'] = request.form.get("et_before_hundrede") == "yes"
+        options['et_before_tusinde'] = request.form.get("et_before_tusinde") == "yes"
+        options['group_hundreds_and_thousands_digit'] = request.form.get("group_hundreds_and_thousands_digit") == "yes"
 
         if value is None:
             error = "Please enter a non-negative integer."
@@ -43,12 +51,7 @@ def index():
             error = "Please enter a valid non-negative integer."
         else:
             try:
-                result = get_name(
-                    value,
-                    seperator=get_separator(seperator),
-                    et_before_hundrede=et_before_hundrede,
-                    et_before_tusinde=et_before_tusinde,
-                )
+                result = danish_number_name(value, **options)
             except NumberTooBig:
                 error = "That number is too large. Enter a smaller non-negative integer."
 
@@ -57,9 +60,7 @@ def index():
         value=value,
         result=result,
         error=error,
-        seperator=seperator,
-        et_before_hundrede=et_before_hundrede,
-        et_before_tusinde=et_before_tusinde,
+        **options
     )
 
 
@@ -79,7 +80,7 @@ def handle_raw_input(raw: str) -> None | int:
     return value
 
 
-def get_separator(signature: str) -> Literal["", " ", "-"]:
+def get_separator(signature: str) -> Literal["", " ", "-", "."]:
     """Convert a separator option name to its literal string value.
 
     Args:
@@ -94,10 +95,12 @@ def get_separator(signature: str) -> Literal["", " ", "-"]:
     match signature.lower():
         case "none":
             return ""
-        case "space":
+        case "space" | " ":
             return " "
-        case "hyphen":
+        case "hyphen" | "-":
             return "-"
+        case "dot" | ".":
+            return "."
         case _:
             raise ValueError(f"Unknown seperator: {signature}")
 
